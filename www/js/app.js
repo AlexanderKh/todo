@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
+angular.module('starter', ['ionic', 'todo.controllers', 'todo.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -39,83 +39,3 @@ angular.module('starter', ['ionic'])
   $urlRouterProvider.otherwise('/todos');
 })
 
-.controller('TodoListCtrl', function ($scope, $ionicPopup, $ionicModal, TodoService) {
-  $scope.showDelete = false;
-  $scope.toggleDelete = function () {
-    $scope.showDelete = !$scope.showDelete;
-  };
-
-  $scope.deleteTodo = function (item) {
-    var confirmPopup = $ionicPopup.confirm({
-      title: 'Remove TODO',
-      template: 'Are you sure you want to remove TODO ' + item.title,
-      okType: 'button-assertive'
-    });
-
-    confirmPopup.then(function(res) {
-      if (res) {
-        TodoService.delete(item);
-      }
-    });
-  };
-
-  $ionicModal.fromTemplateUrl('templates/todo-new.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-
-  $scope.openModal = function() {
-    $scope.modal.show();
-    $scope.todo = {};
-  };
-
-  $scope.closeModal = function() {
-    $scope.modal.hide();
-  };
-
-  $scope.createTodo = function(todo) {
-    TodoService.add(todo);
-    $scope.closeModal();
-  };
-
-  $scope.items = TodoService.all();
-})
-
-.controller('TodoDetailsCtrl', function ($scope, $stateParams, TodoService) {
-  $scope.todo = TodoService.get($stateParams.id);
-})
-
-.service('TodoService', function() {
-  var data = [
-    {
-      id: 1,
-      title: 'Wash dishes',
-      deadline: new Date(2016, 09, 02),
-      detail: 'ЫЫЫЫЫЫЫ'
-    },
-    {
-      id: 2,
-      title: 'Get cat to walk',
-      deadline: new Date(2016, 09, 05),
-      detail: 'ЫЫЫЫЫЫЫ'
-    }
-  ];
-
-  return {
-    all: function() {
-      return data
-    },
-    get: function (id) {
-      return _.find(data, function (obj) { return obj.id == id });
-    },
-    delete: function (todo) {
-      data.splice(data.indexOf(todo), 1);
-    },
-    add: function (todo) {
-      todo.id = data[data.length - 1].id + 1;
-      data.push(todo);
-      return todo;
-    }
-  };
-});
