@@ -1,0 +1,25 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <div class="buttons">
+            <h1 class="title">Add TODO</h1>
+            <button class="button button-icon ion-ios-close-empty" ng-click="closeModal()"></button>
+        </div>
+    </ion-header-bar>
+    <ion-content class="padding">
+        <ion-list>
+            <label class="item item-input">
+                <input ng-model="todo.title" type="text" placeholder="Title">
+            </label>
+            <label class="item item-input">
+                <textarea ng-model="todo.detail" placeholder="Details"></textarea>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Deadline</span>
+                <input ng-model="todo.deadline" type="date">
+            </label>
+            <button class="button button-block button-balanced" ng-click="createTodo(todo)">
+                Create
+            </button>
+        </ion-list>
+    </ion-content>
+</ion-modal-view>

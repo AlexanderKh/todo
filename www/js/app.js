@@ -34,12 +34,12 @@ angular.module('starter', ['ionic'])
       url: '/todos/:id',
       templateUrl: 'templates/todo-details.html',
       controller: 'TodoDetailsCtrl'
-    })
+    });
 
   $urlRouterProvider.otherwise('/todos');
 })
 
-.controller('TodoListCtrl', function ($scope, $ionicPopup, TodoService) {
+.controller('TodoListCtrl', function ($scope, $ionicPopup, $ionicModal, TodoService) {
   $scope.showDelete = false;
   $scope.toggleDelete = function () {
     $scope.showDelete = !$scope.showDelete;
@@ -54,10 +54,29 @@ angular.module('starter', ['ionic'])
 
     confirmPopup.then(function(res) {
       if (res) {
-        TodoService.delete(item.id);
-        $scope.items.splice($scope.items.indexOf(item), 1);
+        TodoService.delete(item);
       }
     });
+  };
+
+  $ionicModal.fromTemplateUrl('templates/todo-new.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openModal = function() {
+    $scope.modal.show();
+    $scope.todo = {};
+  };
+
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+  };
+
+  $scope.createTodo = function(todo) {
+    TodoService.add(todo);
+    $scope.closeModal();
   };
 
   $scope.items = TodoService.all();
@@ -90,8 +109,13 @@ angular.module('starter', ['ionic'])
     get: function (id) {
       return _.find(data, function (obj) { return obj.id == id });
     },
-    delete: function (id) {
-      data = _.filter(data, function (obj) { return obj.id != id })
+    delete: function (todo) {
+      data.splice(data.indexOf(todo), 1);
+    },
+    add: function (todo) {
+      todo.id = data[data.length - 1].id + 1;
+      data.push(todo);
+      return todo;
     }
   };
 });

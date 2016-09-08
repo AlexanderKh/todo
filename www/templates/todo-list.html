@@ -3,6 +3,10 @@
         <button class="button button-icon icon ion-ios-minus-outline" ng-click="toggleDelete()"></button>
     </ion-nav-buttons>
 
+    <ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-ios-plus-outline" ng-click="openModal()"></button>
+    </ion-nav-buttons>
+
     <ion-content class="padding">
       <ion-list show-delete="showDelete">
           <ion-item ng-repeat="item in items" ui-sref="todos-details({ id: item.id })">
