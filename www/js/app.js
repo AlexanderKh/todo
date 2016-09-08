@@ -39,15 +39,25 @@ angular.module('starter', ['ionic'])
   $urlRouterProvider.otherwise('/todos');
 })
 
-.controller('TodoListCtrl', function ($scope, TodoService) {
+.controller('TodoListCtrl', function ($scope, $ionicPopup, TodoService) {
   $scope.showDelete = false;
   $scope.toggleDelete = function () {
     $scope.showDelete = !$scope.showDelete;
   };
 
   $scope.deleteTodo = function (item) {
-    TodoService.delete(item.id);
-    $scope.items.splice($scope.items.indexOf(item), 1);
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Remove TODO',
+      template: 'Are you sure you want to remove TODO ' + item.title,
+      okType: 'button-assertive'
+    });
+
+    confirmPopup.then(function(res) {
+      if (res) {
+        TodoService.delete(item.id);
+        $scope.items.splice($scope.items.indexOf(item), 1);
+      }
+    });
   };
 
   $scope.items = TodoService.all();
