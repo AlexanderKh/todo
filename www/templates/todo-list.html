@@ -1,0 +1,15 @@
+<ion-view view-title="Todo List">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon icon ion-ios-minus-outline" ng-click="toggleDelete()"></button>
+    </ion-nav-buttons>
+
+    <ion-content class="padding">
+      <ion-list show-delete="showDelete">
+          <ion-item ng-repeat="item in items" ui-sref="todos-details({ id: {{item.id}} })">
+                  <span class="col">{{item.deadline.toDateString()}}</span>
+                  <span class="col">{{item.title}}</span>
+              <ion-delete-button class="ion-minus-circled" ng-click="deleteTodo(item)"></ion-delete-button>
+          </ion-item>
+      </ion-list>
+    </ion-content>
+</ion-view>

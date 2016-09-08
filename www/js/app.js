@@ -22,3 +22,66 @@ angular.module('starter', ['ionic'])
     }
   });
 })
+
+.config(function ($stateProvider, $urlRouterProvider) {
+  $stateProvider
+    .state('todos-list', {
+      url: '/todos',
+      templateUrl: 'templates/todo-list.html',
+      controller: 'TodoListCtrl'
+    })
+    .state('todos-details', {
+      url: '/todos/:id',
+      templateUrl: 'templates/todo-details.html',
+      controller: 'TodoDetailsCtrl'
+    })
+
+  $urlRouterProvider.otherwise('/todos');
+})
+
+.controller('TodoListCtrl', function ($scope, TodoService) {
+  $scope.showDelete = false;
+  $scope.toggleDelete = function () {
+    $scope.showDelete = !$scope.showDelete;
+  };
+
+  $scope.deleteTodo = function (item) {
+    TodoService.delete(item.id);
+    $scope.items.splice($scope.items.indexOf(item), 1);
+  };
+
+  $scope.items = TodoService.all();
+})
+
+.controller('TodoDetailsCtrl', function ($scope, $stateParams, TodoService) {
+  $scope.todo = TodoService.get($stateParams.id);
+})
+
+.service('TodoService', function() {
+  var data = [
+    {
+      id: 1,
+      title: 'Wash dishes',
+      deadline: new Date(2016, 09, 02),
+      detail: 'ЫЫЫЫЫЫЫ'
+    },
+    {
+      id: 2,
+      title: 'Get cat to walk',
+      deadline: new Date(2016, 09, 05),
+      detail: 'ЫЫЫЫЫЫЫ'
+    }
+  ];
+
+  return {
+    all: function() {
+      return data
+    },
+    get: function (id) {
+      return _.find(data, function (obj) { return obj.id == id });
+    },
+    delete: function (id) {
+      data = _.filter(data, function (obj) { return obj.id != id })
+    }
+  };
+});
